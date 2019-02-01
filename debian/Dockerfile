@@ -21,9 +21,6 @@ RUN \
   # Update repositories cache and distribution
   apt-get -qq update && apt-get -qqy upgrade
 
-# Update repositories cache and distribution
-RUN apt-get -qq update && apt-get -qqy upgrade
-
 RUN apt-get -yqq install \
   apt-utils \
   build-essential \
@@ -43,12 +40,18 @@ RUN apt-get -yqq install \
   ruby \
   ruby-full \
   build-essential \
+  nano \
   sudo
  
 # RUN apt-get install curl-dev ruby-dev build-base sudo ruby ruby-io-console ruby-rdoc ruby-irb libffi-dev python git
 
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash - ; \
   apt-get install -y nodejs
+  
+# Cleanup some things.
+RUN apt-get -q autoclean && \
+  rm -rf /var/lib/apt/lists/*
+
 #==============================================================================
 # LAMP Setup
 #==============================================================================
@@ -66,21 +69,24 @@ RUN \
 # Node
 #==============================================================================
 # Node modules
-RUN npm install --global gulp 
-RUN npm install -g graceful-fs && npm install -g gulp
-RUN npm install --global yarn
-RUN npm install --global webpack
+RUN \
+  npm install --global gulp && \
+  npm install -g graceful-fs && \
+  npm install -g gulp && \
+  npm install --global yarn && \
+  npm install --global webpack
 
 #==============================================================================
 # LOCAL TO THIS PROJECT
 #==============================================================================
 # Ruby
-RUN gem install bundler
-RUN gem install hologram
-RUN gem install jekyll bundler
+RUN \
+  gem install bundler && \
+  gem install hologram && \
+  gem install jekyll bundler
 
 USER keopx
 
-EXPOSE 80 3000 9000
+EXPOSE 80 3000 4000 9000
 
 CMD ["tail","-f","/dev/null"]
