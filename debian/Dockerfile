@@ -19,9 +19,8 @@ RUN \
   echo "deb http://security.debian.org/ stretch/updates main contrib non-free\n" >> /etc/apt/sources.list && \
   echo "deb-src http://security.debian.org/ stretch/updates main contrib non-free" >> /etc/apt/sources.list && \
   # Update repositories cache and distribution
-  apt-get -qq update && apt-get -qqy upgrade
-
-RUN apt-get -yqq install \
+  apt-get -qq update && apt-get -qqy upgrade && \
+  apt-get -yqq install \
   apt-utils \
   build-essential \
   debconf-utils \
@@ -41,49 +40,36 @@ RUN apt-get -yqq install \
   ruby-full \
   build-essential \
   nano \
-  sudo
- 
+  sudo && \ 
 # RUN apt-get install curl-dev ruby-dev build-base sudo ruby ruby-io-console ruby-rdoc ruby-irb libffi-dev python git
-
-RUN curl -sL https://deb.nodesource.com/setup_11.x | bash - ; \
-  apt-get install -y nodejs
-  
+  curl -sL https://deb.nodesource.com/setup_12.x | bash - ; \
+  apt-get install -y nodejs && \
 # Cleanup some things.
-RUN apt-get -q autoclean && \
-  rm -rf /var/lib/apt/lists/*
-
+  apt-get -q autoclean && \
+  rm -rf /var/lib/apt/lists/* && \ 
 #==============================================================================
-# LAMP Setup
+# Node
 #==============================================================================
-
+# Node modules
+  npm install --global gulp && \
+  npm install -g graceful-fs && \
+  npm install -g gulp && \
+  npm install --global yarn && \
+  npm install --global webpack && \
+#==============================================================================
+# LOCAL TO THIS PROJECT
+#==============================================================================
+# Ruby
+  gem install bundler && \
+  gem install hologram && \
+  gem install jekyll bundler && \
 # add local user
-RUN \
   groupadd -g $UID $GID ; \
   useradd -m -u $UID -g $GID -s /bin/bash $UNAME ; \
   usermod -aG sudo $UNAME; \
   echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers; \
   echo ". /usr/share/bash-completion/bash_completion" >> /home/$UNAME/.bashrc && echo "alias ll='ls -lahs'" >> /home/$UNAME/.bashrc ; \
   echo ". /usr/share/bash-completion/bash_completion" >> ~/.bashrc && echo "alias ll='ls -lahs'" >> ~/.bashrc
-
-#==============================================================================
-# Node
-#==============================================================================
-# Node modules
-RUN \
-  npm install --global gulp && \
-  npm install -g graceful-fs && \
-  npm install -g gulp && \
-  npm install --global yarn && \
-  npm install --global webpack
-
-#==============================================================================
-# LOCAL TO THIS PROJECT
-#==============================================================================
-# Ruby
-RUN \
-  gem install bundler && \
-  gem install hologram && \
-  gem install jekyll bundler
 
 USER keopx
 
