@@ -1,23 +1,25 @@
-FROM debian:stretch
+FROM debian:buster
 
 MAINTAINER keopx <keopx@keopx.net>
 
-ENV DEBIAN_FRONTEND noninteractive
-
-ARG UID=1000
-ARG GID=1000
-ARG UNAME=keopx
-
+# System environments
+ENV DEBIAN_FRONTEND="noninteractive" \
+    LOCALE="es_ES.UTF-8" \
+    GOTPL_VER="0.1.5" \
+    DEFAULT_ROOT="/var/www/html" \
+    UID="1000" \
+    GID="1000" \
+    UNAME="keopx"
 #==============================================================================
 # OS Setup
 #==============================================================================
 
 # Set repositories
 RUN \
-  echo "deb http://ftp.de.debian.org/debian/ stretch main non-free contrib\n" > /etc/apt/sources.list && \
-  echo "deb-src http://ftp.de.debian.org/debian/ stretch main non-free contrib\n" >> /etc/apt/sources.list && \
-  echo "deb http://security.debian.org/ stretch/updates main contrib non-free\n" >> /etc/apt/sources.list && \
-  echo "deb-src http://security.debian.org/ stretch/updates main contrib non-free" >> /etc/apt/sources.list && \
+  echo "deb http://ftp.de.debian.org/debian/ buster main non-free contrib" > /etc/apt/sources.list && \
+  echo "deb-src http://ftp.de.debian.org/debian/ buster main non-free contrib" >> /etc/apt/sources.list && \
+  echo "deb http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list && \
+  echo "deb-src http://security.debian.org/ buster/updates main contrib non-free" >> /etc/apt/sources.list && \
   # Update repositories cache and distribution
   apt-get -qq update && apt-get -qqy upgrade && \
   apt-get -yqq install \
