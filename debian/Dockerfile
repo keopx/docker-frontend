@@ -58,10 +58,12 @@ RUN \
   npm install -g gulp && \
   npm install --global yarn && \
   npm install --global webpack && \
+  npm install -g grunt-cli && \
 #==============================================================================
 # LOCAL TO THIS PROJECT
 #==============================================================================
 # Ruby
+  gem install compass && \
   gem install bundler && \
   gem install hologram && \
   gem install jekyll bundler && \
